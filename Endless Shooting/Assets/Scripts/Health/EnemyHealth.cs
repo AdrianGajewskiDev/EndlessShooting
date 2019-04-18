@@ -6,7 +6,7 @@ public class EnemyHealth : MonoBehaviour
 {
     int health = 5;
 
-    void GetDamage(int amount)
+    public void GiveDamageToEnemy(int amount)
     {
         health -= amount;
     }

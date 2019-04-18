@@ -8,20 +8,22 @@ public class HandGun : MonoBehaviour, IGun
     float timeToFireAllowed;
     GameObject effectToSpawn;
     RaycastHit hit;
+    string tag = string.Empty;
 
     public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
-        ray.transform.SendMessage("GetDamage", damageAmount, SendMessageOptions.DontRequireReceiver);
+        ray.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(damageAmount);
     }
 
     public IEnumerator Reload()
     {
         if(InputController.Reload_Button)
         {
-
-        
             Debug.Log("Reloading");
-            yield return new WaitForSecondsRealtime(3f);
+            Atrributes.Animation.Play("HandGunReload");
+            Atrributes.ReloadSound.Play();
+            yield return new WaitForSeconds(4.5f);
+        
             if(Atrributes.MaxAmmo >= 1)
             {
                 if(Atrributes.CurrentAmmoInCip > 0)
@@ -29,6 +31,7 @@ public class HandGun : MonoBehaviour, IGun
                     var currentAmmo = Atrributes.CurrentAmmoInCip;
                     var ammoToAdd = Atrributes.ClipSize - currentAmmo;
                     Atrributes.MaxAmmo -= ammoToAdd;
+                    Atrributes.CurrentAmmoInCip += ammoToAdd;
                 }
                 
                 if(Atrributes.CurrentAmmoInCip == 0)
@@ -61,10 +64,10 @@ public class HandGun : MonoBehaviour, IGun
 
             if(hit.distance <= Atrributes.Range)
             {
-                if(hit.transform.CompareTag("Enemy"))
-                    GiveDamage(ref hit, Atrributes.Damage);
-                else if(hit.transform.tag == null)
-                    return;      
+                if(tag == "Enemy")
+                {
+                    GiveDamage(ref hit, Atrributes.Damage);                
+                }
             }
         }
     }
@@ -99,14 +102,25 @@ public class HandGun : MonoBehaviour, IGun
     {
         SetInput();
         Shoot();
-        StartCoroutine(Reload());
-        if(Physics.Raycast(Atrributes.ShotPoint.position, transform.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
-        { 
-            Debug.Log(hit.transform.tag);      
-        }
-       
+        StartCoroutine(Reload()); 
     }
 
+    void FixedUpdate()
+    {
+        if(Physics.Raycast(Atrributes.ShotPoint.position, transform.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
+        { 
+            Debug.Log(tag);      
+        }
+
+        if(hit.transform != null)
+        {
+            if(hit.transform.tag != null)
+            {
+                tag = hit.transform.tag;
+            }
+        }
+        
+    }
     void SetInput()
     {
         InputController.Left_Mouse = Input.GetButtonDown("Fire1");
