@@ -11,18 +11,49 @@ public class HandGun : MonoBehaviour, IGun
 
     public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
-        ray.transform.gameObject.SendMessage("GetDamage", damageAmount, SendMessageOptions.DontRequireReceiver);
+        ray.transform.SendMessage("GetDamage", damageAmount, SendMessageOptions.DontRequireReceiver);
     }
 
     public IEnumerator Reload()
     {
-        yield return null;
+        if(InputController.Reload_Button)
+        {
+
+        
+            Debug.Log("Reloading");
+            yield return new WaitForSecondsRealtime(3f);
+            if(Atrributes.MaxAmmo >= 1)
+            {
+                if(Atrributes.CurrentAmmoInCip > 0)
+                {
+                    var currentAmmo = Atrributes.CurrentAmmoInCip;
+                    var ammoToAdd = Atrributes.ClipSize - currentAmmo;
+                    Atrributes.MaxAmmo -= ammoToAdd;
+                }
+                
+                if(Atrributes.CurrentAmmoInCip == 0)
+                {
+                    var ammoToAdd = Atrributes.ClipSize;
+                    Atrributes.MaxAmmo -= ammoToAdd;
+                    Atrributes.CurrentAmmoInCip += ammoToAdd;
+                }  
+            }
+            else
+            {
+                Debug.Log("No Ammo");
+            }
+
+            Debug.Log("Done");
+        }
     }
 
     public void Shoot()
     {
-        if(InputController.Left_Mouse && Time.time >= timeToFireAllowed)
-        {
+        if(InputController.Left_Mouse && Time.time >= timeToFireAllowed 
+            && Atrributes.CurrentAmmoInCip >= 1)
+        {  
+            Atrributes.CurrentAmmoInCip -= 1;
+
             timeToFireAllowed = Time.time + 1 / Atrributes.RateOfFire;
             Atrributes.ShotSound.Play();
             Atrributes.Animation.Play();
@@ -30,7 +61,7 @@ public class HandGun : MonoBehaviour, IGun
 
             if(hit.distance <= Atrributes.Range)
             {
-                if(hit.transform.tag == "Enemy")
+                if(hit.transform.CompareTag("Enemy"))
                     GiveDamage(ref hit, Atrributes.Damage);
                 else if(hit.transform.tag == null)
                     return;      
@@ -56,7 +87,6 @@ public class HandGun : MonoBehaviour, IGun
     void Start()
     {
         Atrributes.Animation = GetComponentInParent<Animation>();
-       
     }
 
     void Awake()
@@ -67,13 +97,19 @@ public class HandGun : MonoBehaviour, IGun
     // Update is called once per frame
     void Update()
     {
-        InputController.Left_Mouse = Input.GetButtonDown("Fire1");
+        SetInput();
         Shoot();
-
+        StartCoroutine(Reload());
         if(Physics.Raycast(Atrributes.ShotPoint.position, transform.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
         { 
             Debug.Log(hit.transform.tag);      
         }
-        effectToSpawn = Atrributes.VFX[0];
+       
+    }
+
+    void SetInput()
+    {
+        InputController.Left_Mouse = Input.GetButtonDown("Fire1");
+        InputController.Reload_Button = Input.GetButtonDown("Reload");
     }
 }

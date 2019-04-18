@@ -209,7 +209,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.005, y: 0.005, z: 0.005}
+  m_Size: {x: 0.01, y: 0.01, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &396003996
 MonoBehaviour:
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   muzzle: {fileID: 0}
-  hit: {fileID: 0}
+  hit: {fileID: 632129876413390779, guid: 0afbc82fd45c1a24b9d748f6e73a44bc, type: 3}
 --- !u!1 &2111969737756290948
 GameObject:
   m_ObjectHideFlags: 0
