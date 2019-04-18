@@ -6,6 +6,6 @@ public interface IGun
 {
     void Shoot();
     IEnumerator Reload();
-    void GiveDamage(ref RaycastHit hit);
+    void GiveDamage(ref RaycastHit ray, int damageAmount);
     void SpawnProjectile();
 } 

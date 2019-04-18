@@ -7,10 +7,11 @@ public class HandGun : MonoBehaviour, IGun
     public GunAtrributes Atrributes;
     float timeToFireAllowed;
     GameObject effectToSpawn;
+    RaycastHit hit;
 
-    public void GiveDamage(ref RaycastHit hit)
+    public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
-        
+        ray.transform.gameObject.SendMessage("GetDamage", damageAmount, SendMessageOptions.DontRequireReceiver);
     }
 
     public IEnumerator Reload()
@@ -26,6 +27,14 @@ public class HandGun : MonoBehaviour, IGun
             Atrributes.ShotSound.Play();
             Atrributes.Animation.Play();
             SpawnProjectile();
+
+            if(hit.distance <= Atrributes.Range)
+            {
+                if(hit.transform.tag == "Enemy")
+                    GiveDamage(ref hit, Atrributes.Damage);
+                else if(hit.transform.tag == null)
+                    return;      
+            }
         }
     }
 
@@ -47,6 +56,11 @@ public class HandGun : MonoBehaviour, IGun
     void Start()
     {
         Atrributes.Animation = GetComponentInParent<Animation>();
+       
+    }
+
+    void Awake()
+    {
         effectToSpawn = Atrributes.VFX[0];
     }
 
@@ -55,5 +69,11 @@ public class HandGun : MonoBehaviour, IGun
     {
         InputController.Left_Mouse = Input.GetButtonDown("Fire1");
         Shoot();
+
+        if(Physics.Raycast(Atrributes.ShotPoint.position, transform.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
+        { 
+            Debug.Log(hit.transform.tag);      
+        }
+        effectToSpawn = Atrributes.VFX[0];
     }
 }
