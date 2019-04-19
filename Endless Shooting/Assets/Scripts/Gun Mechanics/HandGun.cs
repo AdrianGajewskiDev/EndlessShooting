@@ -13,8 +13,12 @@ public class HandGun : MonoBehaviour, IGun
 
     public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
-        if(ray.transform.GetComponent<EnemyHealth>() != null)
-            ray.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(damageAmount);
+        if(ray.transform != null)
+        {
+            if(ray.transform.GetComponent<EnemyHealth>() != null)
+                ray.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(damageAmount);
+        }
+        
     }
 
     public IEnumerator Reload()
@@ -25,7 +29,7 @@ public class HandGun : MonoBehaviour, IGun
             Atrributes.Animation.Play("HandGunReload");
             Atrributes.ReloadSound.Play();
             GetComponentInParent<HandGun>().enabled = false;
-            yield return new WaitForSeconds(4.5f);
+            yield return new WaitForSeconds(4f);
             GetComponentInParent<HandGun>().enabled = true;
             if(Atrributes.MaxAmmo >= 1)
             {
@@ -58,6 +62,7 @@ public class HandGun : MonoBehaviour, IGun
         if(InputController.Left_Mouse && Time.time >= timeToFireAllowed 
             && Atrributes.CurrentAmmoInCip >= 1)
         {  
+            AnimateCrosshairs();
             Atrributes.CurrentAmmoInCip -= 1;
 
             timeToFireAllowed = Time.time + 1 / Atrributes.RateOfFire;
@@ -91,10 +96,7 @@ public class HandGun : MonoBehaviour, IGun
 
     void AnimateCrosshairs()
     {
-        foreach(var CH in Atrributes.Crosshairs)
-        {
-            CH.GetComponent<Animation>().Play();
-        }
+        Atrributes.Crosshair.GetComponent<Animation>().Play("CrosshairShotAnim");
     }
 
 

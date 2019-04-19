@@ -1,0 +1,3 @@
+Moving: WSAD
+Shooting: Left Mouse
+Reload: R
