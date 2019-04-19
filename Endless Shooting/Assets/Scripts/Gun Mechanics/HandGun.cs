@@ -23,31 +23,37 @@ public class HandGun : MonoBehaviour, IGun
 
     public IEnumerator Reload()
     {
+    
         if(InputController.Reload_Button)
         {
-            Debug.Log("Reloading");
-            Atrributes.Animation.Play("HandGunReload");
-            Atrributes.ReloadSound.Play();
-            GetComponentInParent<HandGun>().enabled = false;
-            yield return new WaitForSeconds(4f);
-            GetComponentInParent<HandGun>().enabled = true;
             if(Atrributes.MaxAmmo >= 1)
             {
-                if(Atrributes.CurrentAmmoInCip > 0)
+
+            
+                Debug.Log("Reloading");
+                Atrributes.Animation.Play("HandGunReload");
+                Atrributes.ReloadSound.Play();
+                GetComponentInParent<HandGun>().enabled = false;
+                yield return new WaitForSeconds(4f);
+                GetComponentInParent<HandGun>().enabled = true;
+                if(Atrributes.MaxAmmo >= 1)
                 {
-                    var currentAmmo = Atrributes.CurrentAmmoInCip;
-                    var ammoToAdd = Atrributes.ClipSize - currentAmmo;
-                    Atrributes.MaxAmmo -= ammoToAdd;
-                    Atrributes.CurrentAmmoInCip += ammoToAdd;
+                    if(Atrributes.CurrentAmmoInCip > 0)
+                    {
+                        var currentAmmo = Atrributes.CurrentAmmoInCip;
+                        var ammoToAdd = Atrributes.ClipSize - currentAmmo;
+                        Atrributes.MaxAmmo -= ammoToAdd;
+                        Atrributes.CurrentAmmoInCip += ammoToAdd;
+                    }
+                    
+                    if(Atrributes.CurrentAmmoInCip == 0)
+                    {
+                        var ammoToAdd = Atrributes.ClipSize;
+                        Atrributes.MaxAmmo -= ammoToAdd;
+                        Atrributes.CurrentAmmoInCip += ammoToAdd;
+                    }  
                 }
-                
-                if(Atrributes.CurrentAmmoInCip == 0)
-                {
-                    var ammoToAdd = Atrributes.ClipSize;
-                    Atrributes.MaxAmmo -= ammoToAdd;
-                    Atrributes.CurrentAmmoInCip += ammoToAdd;
-                }  
-            }
+            }    
             else
             {
                 Debug.Log("No Ammo");
@@ -117,6 +123,7 @@ public class HandGun : MonoBehaviour, IGun
         SetInput();
         Shoot();
         StartCoroutine(Reload()); 
+        UIAmmoController.Type = Atrributes.Type;
     }
 
     void FixedUpdate()

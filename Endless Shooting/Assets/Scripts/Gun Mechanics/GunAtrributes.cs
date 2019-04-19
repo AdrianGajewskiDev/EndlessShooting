@@ -12,12 +12,12 @@ public struct GunAtrributes
     public int Damage;
     public float RateOfFire;
     public float Range;
+    public GunType Type;
     [HideInInspector] public Animation Animation;
     public AudioSource ShotSound;
     public AudioSource ReloadSound;
     public Transform ShotPoint;
     public GameObject Crosshair;
-    public GameObject[] Crosshairs;
     public GameObject[] VFX;
 
 }
