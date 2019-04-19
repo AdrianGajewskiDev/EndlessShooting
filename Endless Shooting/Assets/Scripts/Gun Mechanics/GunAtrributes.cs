@@ -16,6 +16,8 @@ public struct GunAtrributes
     public AudioSource ShotSound;
     public AudioSource ReloadSound;
     public Transform ShotPoint;
+    public GameObject Crosshair;
+    public GameObject[] Crosshairs;
     public GameObject[] VFX;
 
 }

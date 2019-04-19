@@ -8,11 +8,13 @@ public class HandGun : MonoBehaviour, IGun
     float timeToFireAllowed;
     GameObject effectToSpawn;
     RaycastHit hit;
+    Ray ray;
     string tag = string.Empty;
 
     public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
-        ray.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(damageAmount);
+        if(ray.transform.GetComponent<EnemyHealth>() != null)
+            ray.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(damageAmount);
     }
 
     public IEnumerator Reload()
@@ -22,8 +24,9 @@ public class HandGun : MonoBehaviour, IGun
             Debug.Log("Reloading");
             Atrributes.Animation.Play("HandGunReload");
             Atrributes.ReloadSound.Play();
+            GetComponentInParent<HandGun>().enabled = false;
             yield return new WaitForSeconds(4.5f);
-        
+            GetComponentInParent<HandGun>().enabled = true;
             if(Atrributes.MaxAmmo >= 1)
             {
                 if(Atrributes.CurrentAmmoInCip > 0)
@@ -86,6 +89,15 @@ public class HandGun : MonoBehaviour, IGun
         }
     }
 
+    void AnimateCrosshairs()
+    {
+        foreach(var CH in Atrributes.Crosshairs)
+        {
+            CH.GetComponent<Animation>().Play();
+        }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -107,9 +119,11 @@ public class HandGun : MonoBehaviour, IGun
 
     void FixedUpdate()
     {
-        if(Physics.Raycast(Atrributes.ShotPoint.position, transform.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
+        ray = Camera.main.ScreenPointToRay(Atrributes.Crosshair.transform.position);
+
+        if(Physics.Raycast(ray, out hit, Atrributes.Range))
         { 
-            Debug.Log(tag);      
+            Debug.Log(hit.transform.tag);      
         }
 
         if(hit.transform != null)
@@ -118,8 +132,7 @@ public class HandGun : MonoBehaviour, IGun
             {
                 tag = hit.transform.tag;
             }
-        }
-        
+        }       
     }
     void SetInput()
     {
