@@ -7,4 +7,7 @@ public class InputController : MonoBehaviour
     public static bool Left_Mouse;
     public static bool Right_Mouse;
     public static bool Reload_Button;
+
+    public static bool HandGun;
+    public static bool Rifle;
 }

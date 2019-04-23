@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Aiming : MonoBehaviour
 {
-    bool IsAiming = false;
-    public float aimSpeed;
+    public bool IsAiming = false;
     public Vector3 NormalPosition;
     public Vector3 AimPosition;
     

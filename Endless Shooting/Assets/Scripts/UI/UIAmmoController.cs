@@ -7,23 +7,44 @@ public class UIAmmoController : MonoBehaviour
 {
     public static GunType Type;
     public Text AmmoCounter;
+    GameObject CurrentWeaponScriptHolder;
     public GameObject WeaponsScriptHolder;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject SMGWeaponScriptHolder;
 
     // Update is called once per frame
     void Update()
     {
+
+        if(Type == GunType.HandGun)
+        {
+            CurrentWeaponScriptHolder = WeaponsScriptHolder;
+        }
+        else if(Type == GunType.SMGGun)
+        {
+            CurrentWeaponScriptHolder = SMGWeaponScriptHolder;
+        }
+
         switch(Type)
         {
             case GunType.HandGun:
             {
-                var script = WeaponsScriptHolder.GetComponent<HandGun>();
+                var script = CurrentWeaponScriptHolder.GetComponent<HandGun>();
                 AmmoCounter.text = script.Atrributes.CurrentAmmoInCip + "/" + script.Atrributes.MaxAmmo;
             }break;
+
+            
+            case GunType.SMGGun:
+            {
+                var script = CurrentWeaponScriptHolder.GetComponent<SMGGun>();
+                AmmoCounter.text = script.Atrributes.CurrentAmmoInCip + "/" + script.Atrributes.MaxAmmo;
+            }break;
+
+            case GunType.Arms:
+            {
+                AmmoCounter.text = string.Empty;
+            }
+            break;
+
         }
         
         Debug.Log(Type);

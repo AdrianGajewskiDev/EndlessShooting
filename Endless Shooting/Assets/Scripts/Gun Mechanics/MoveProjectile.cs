@@ -20,6 +20,7 @@ public class MoveProjectile : MonoBehaviour
         }
 
         Destroy(GameObject.Find("Projectile(Clone)"), 10);
+        Destroy(GameObject.Find("Hit(Clone)"), 1);
     }
 
     void OnCollisionEnter(Collision col)
@@ -34,5 +35,6 @@ public class MoveProjectile : MonoBehaviour
             var hitVFX = Instantiate(hit, pos, rot);
         }
         Destroy(gameObject);
+        Destroy(GameObject.Find("Hit(Clone)"), 1);
     }
 }

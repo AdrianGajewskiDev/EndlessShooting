@@ -148,4 +148,9 @@ public class HandGun : MonoBehaviour, IGun
         InputController.Left_Mouse = Input.GetButtonDown("Fire1");
         InputController.Reload_Button = Input.GetButtonDown("Reload");
     }
+
+    // void OnDisabled()
+    // {
+    //     UIAmmoController.Type = GunType.Arms
+    // }
 }

@@ -1,0 +1,22 @@
+# Blender MTL File: 'hands.blend'
+# Material Count: 2
+
+newmtl Material.004
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.375938 0.251382
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\\Program Files (x86)\\models\\hand\\kim_kardashian_makeup_khloes_house_face_celebrity_92901_3840x2160.png
+
+newmtl Material.005
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.450744 0.640000 0.212566
+Ks 0.485093 0.500000 0.493400
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\\Program Files (x86)\\models\\hand\\images.jpg
