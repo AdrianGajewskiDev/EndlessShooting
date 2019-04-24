@@ -23,17 +23,17 @@ public class SMGGun : MonoBehaviour, IGun
 
     public IEnumerator Reload()
     {
-        if(InputController.Right_Mouse)
+        if(InputController.Reload_Button)
         {
             if(Atrributes.MaxAmmo >= 1 )
             {
-                Debug.Log("Reloading");
-                Atrributes.Animation.Play("SmgGunReload");
+                Debug.Log("Reloading");               
                 Atrributes.ReloadSound.Play();
+                Atrributes.Animator.SetBool("Reload",true);
                 GetComponentInParent<SMGGun>().enabled = false;
                 yield return new WaitForSeconds(3f);
-                GetComponentInParent<SMGGun>().enabled = true;
-
+                GetComponentInParent<SMGGun>().enabled = true;   
+                Atrributes.Animator.SetBool("Reload",false);
                 if(Atrributes.MaxAmmo >= 1)
                 {
                     if(Atrributes.CurrentAmmoInCip > 0)
@@ -63,9 +63,9 @@ public class SMGGun : MonoBehaviour, IGun
     {
         if(InputController.Left_Mouse   && Time.time >= timeToFireAllowed && Atrributes.CurrentAmmoInCip >= 1)
         {
-            timeToFireAllowed = Time.time + 1 / Atrributes.RateOfFire;
-            Atrributes.Animation.Play("SmgGunShoot");
+            timeToFireAllowed = Time.time + 1 / Atrributes.RateOfFire;              
             Atrributes.ShotSound.Play();
+            Atrributes.Animator.SetBool("Shoot", true);
             SpawnProjectile();
             Atrributes.CurrentAmmoInCip -= 1;
             
@@ -75,11 +75,15 @@ public class SMGGun : MonoBehaviour, IGun
                     GiveDamage(ref hit, Atrributes.Damage);
             }
         }
+        else if(InputController.Left_Mouse)
+        {
+            Atrributes.Animator.SetBool("Shoot", false);
+        }
     }
 
     void Start()
     {
-        Atrributes.Animation = GetComponentInParent<Animation>();
+        Atrributes.Animator = GetComponentInParent<Animator>();
     }
     
     public void SpawnProjectile()
@@ -111,11 +115,25 @@ public class SMGGun : MonoBehaviour, IGun
         SetInput();
         Shoot();
         StartCoroutine(Reload());
+        Scope();
     }
 
     void SetInput()
     {
         InputController.Left_Mouse = Input.GetMouseButton(0);
-        InputController.Right_Mouse = Input.GetButtonDown("Reload");
+        InputController.Reload_Button = Input.GetButtonDown("Reload");
+        InputController.Right_Mouse = Input.GetMouseButton(1);
+    }
+
+    void Scope()
+    {
+        if(InputController.Right_Mouse)
+        {
+            Atrributes.Animator.SetBool("Scope", true);
+        }
+        else
+        {
+            Atrributes.Animator.SetBool("Scope", false);
+        }
     }
 }

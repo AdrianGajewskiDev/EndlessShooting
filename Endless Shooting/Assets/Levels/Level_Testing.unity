@@ -10630,23 +10630,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1228697028}
   m_PrefabAsset: {fileID: 0}
---- !u!111 &688825071
-Animation:
+--- !u!95 &688825070
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688825068}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: d6e22aef4a2274549849e176f9221c5e, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: d6e22aef4a2274549849e176f9221c5e, type: 2}
-  - {fileID: 7400000, guid: 8a46b5deb63dd7540a413d0992326a28, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7763bb12de701aa4f9bb35fb49365fc0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &767331084
 GameObject:
   m_ObjectHideFlags: 0
@@ -15519,6 +15521,7 @@ MonoBehaviour:
     Range: 100
     Type: 0
     Animation: {fileID: 0}
+    Animator: {fileID: 0}
     ShotSound: {fileID: 960145004}
     ReloadSound: {fileID: 1284817709}
     ShotPoint: {fileID: 492217062}
@@ -26112,7 +26115,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 158e7ac5e03cb2f4f9ff773de9bd01f1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -178.75002
+      value: -178.75
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 158e7ac5e03cb2f4f9ff773de9bd01f1,
         type: 3}
@@ -31523,6 +31526,7 @@ MonoBehaviour:
     Range: 200
     Type: 1
     Animation: {fileID: 0}
+    Animator: {fileID: 0}
     ShotSound: {fileID: 141560789}
     ReloadSound: {fileID: 1178907695}
     ShotPoint: {fileID: 165989858}
@@ -31822,7 +31826,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_Name
-      value: FPSController
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31879,6 +31883,10 @@ PrefabInstance:
     - target: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: near clip plane
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: far clip plane
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
