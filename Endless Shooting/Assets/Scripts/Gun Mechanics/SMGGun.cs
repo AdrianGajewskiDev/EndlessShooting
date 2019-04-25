@@ -72,7 +72,13 @@ public class SMGGun : MonoBehaviour, IGun
             if(hit.distance <= Atrributes.Range)
             {
                 if(tag == "Enemy")
+                {
                     GiveDamage(ref hit, Atrributes.Damage);
+                    SpawnBlood();
+                }
+                else
+                    SpawnHitEffect();
+                
             }
         }
         else if(InputController.Left_Mouse)
@@ -135,5 +141,29 @@ public class SMGGun : MonoBehaviour, IGun
         {
             Atrributes.Animator.SetBool("Scope", false);
         }
+    }
+
+    void SpawnHitEffect()
+    {
+        var ets = Atrributes.VFX[0];
+
+        if(ets != null)
+        {
+            Instantiate(ets, hit.point, hit.transform.rotation);
+        }
+
+        Destroy(ets);
+    }
+
+    void SpawnBlood()
+    {
+        var ets = Atrributes.VFX[1];
+
+        if(ets != null)
+        {
+            Instantiate(ets, hit.point, hit.transform.rotation);
+        }
+
+        Destroy(ets);
     }
 }

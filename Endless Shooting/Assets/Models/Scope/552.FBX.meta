@@ -3,7 +3,22 @@ guid: f40039cb6a34d8b46ab1d542890008a4
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 6ab5dea192aca434db8a3649e3403c9d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Plastic LED - Red On
+    second: {fileID: 2100000, guid: e1025a2b5afecdc418a6c58101fb55a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Plastic Transparent - Light Gray
+    second: {fileID: 2100000, guid: 3088ba7fd6b047d418a650e9b88db61d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

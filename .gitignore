@@ -14,9 +14,15 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+*.meta
+*.mat
+*.png
 *.suo
 *.tmp
 *.user
+*.mp3
+*.jpg
+*.asset
 *.userprefs
 *.pidb
 *.booproj
@@ -27,6 +33,10 @@ ExportedObj/
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
+*.meta
+*.asset
+*.mat
+
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt

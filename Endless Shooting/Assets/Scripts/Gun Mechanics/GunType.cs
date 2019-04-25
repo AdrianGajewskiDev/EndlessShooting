@@ -7,6 +7,7 @@ public enum GunType
     HandGun,
     SMGGun,
     Sniper,
+    LaserGun,
     HeavuMachineGun,
     Arms
 }

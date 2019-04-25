@@ -10,6 +10,7 @@ public class UIAmmoController : MonoBehaviour
     GameObject CurrentWeaponScriptHolder;
     public GameObject WeaponsScriptHolder;
     public GameObject SMGWeaponScriptHolder;
+    public GameObject LaserWeaponScriptHolder;
 
     // Update is called once per frame
     void Update()
@@ -22,6 +23,10 @@ public class UIAmmoController : MonoBehaviour
         else if(Type == GunType.SMGGun)
         {
             CurrentWeaponScriptHolder = SMGWeaponScriptHolder;
+        }
+        else if(Type == GunType.LaserGun)
+        {
+            CurrentWeaponScriptHolder = LaserWeaponScriptHolder;
         }
 
         switch(Type)
@@ -45,6 +50,11 @@ public class UIAmmoController : MonoBehaviour
             }
             break;
 
+            case GunType.LaserGun:
+            {
+                var script = CurrentWeaponScriptHolder.GetComponent<LaserGun>();
+                AmmoCounter.text = script.Atrributes.CurrentAmmoInCip + "/" + script.Atrributes.MaxAmmo;
+            }break;
         }
         
         Debug.Log(Type);
