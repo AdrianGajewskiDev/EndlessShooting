@@ -23,6 +23,12 @@ ExportedObj/
 *.mp3
 *.jpg
 *.asset
+*.meta
+*.mat
+*.wav
+*.anim
+*.unity
+*.prefab
 *.userprefs
 *.pidb
 *.booproj
@@ -34,6 +40,12 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.meta
+*.mat
+*.wav
+*.anim
+*.unity
+*.prefab
+*.controller
 *.asset
 *.mat
 

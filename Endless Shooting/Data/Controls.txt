@@ -1,3 +1,7 @@
 Moving: WSAD
 Shooting: Left Mouse
+Aim: Right Mouse
 Reload: R
+HandGun: Alpha1
+Rifle: Alpha2
+LazerGun: Alpha3

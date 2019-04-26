@@ -120,6 +120,8 @@ public class HandGun : MonoBehaviour, IGun
     // Update is called once per frame
     void Update()
     {
+        Destroy(GameObject.Find("SmallExplosionEffect(Clone)"),0.02f);
+        
         SetInput();
         Shoot();
         StartCoroutine(Reload()); 
