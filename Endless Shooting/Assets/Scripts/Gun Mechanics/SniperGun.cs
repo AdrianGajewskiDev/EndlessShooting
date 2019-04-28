@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class SniperGun : MonoBehaviour, IGun
@@ -9,7 +10,12 @@ public class SniperGun : MonoBehaviour, IGun
     RaycastHit hit;
     string tag = string.Empty;
     float timeToFireAllowed;
+    private const float NORMAL_FIELD_OF_VIEW = 60f;
+    [SerializeField] float scopedFOV;
     [SerializeField] ParticleSystem muzzle;
+    [SerializeField] GameObject scopeOverlay;
+    [SerializeField] GameObject weaponCam;
+    [SerializeField] Camera mainCam;
 
     public void GiveDamage(ref RaycastHit ray, int damageAmount)
     {
@@ -21,6 +27,8 @@ public class SniperGun : MonoBehaviour, IGun
             }
         }
     }
+
+
 
     public IEnumerator Reload()
     {
@@ -61,16 +69,33 @@ public class SniperGun : MonoBehaviour, IGun
             }
         }
     }
-    void Aim()
+    async void Aim()
     {
         if(InputController.Right_Mouse)
-        {
+        {   
+            scopedFOV = 15f;
             Atributes.Animator.SetBool("Scope", true);
+            await Task.Delay(250);
+            weaponCam.SetActive(false);
+            scopeOverlay.SetActive(true);
+            mainCam.fieldOfView = scopedFOV;
         }
-        
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f ) // forward
+        {
+            scopedFOV--;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // backwards
+        {
+            scopedFOV++;
+        }
+
         if(!InputController.Right_Mouse)
         {
             Atributes.Animator.SetBool("Scope", false);
+            scopeOverlay.SetActive(false);
+            weaponCam.SetActive(true);
+            mainCam.fieldOfView = NORMAL_FIELD_OF_VIEW;
         }
     }
     public void Shoot()
@@ -89,7 +114,6 @@ public class SniperGun : MonoBehaviour, IGun
             {
                 GiveDamage(ref hit, Atributes.Damage);
             }
-
             SpawnProjectile();
             SpawnHitEffect();
         }
