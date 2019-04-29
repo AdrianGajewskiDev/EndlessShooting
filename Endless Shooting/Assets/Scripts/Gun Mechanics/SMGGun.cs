@@ -27,7 +27,6 @@ public class SMGGun : MonoBehaviour, IGun
         {
             if(Atrributes.MaxAmmo >= 1 )
             {
-                Debug.Log("Reloading");               
                 Atrributes.ReloadSound.Play();
                 Atrributes.Animator.SetBool("Reload",true);
                 GetComponentInParent<SMGGun>().enabled = false;
@@ -50,10 +49,6 @@ public class SMGGun : MonoBehaviour, IGun
                         Atrributes.MaxAmmo -= ammoToAdd;
                         Atrributes.CurrentAmmoInCip += ammoToAdd;
                     }  
-                }
-                else
-                {
-                    Debug.Log("No Ammo");
                 }
             }
         }
@@ -90,6 +85,7 @@ public class SMGGun : MonoBehaviour, IGun
     void Start()
     {
         Atrributes.Animator = GetComponentInParent<Animator>();
+        Atrributes.Crosshair.SetActive(true);
     }
     
     public void SpawnProjectile()
@@ -103,7 +99,6 @@ public class SMGGun : MonoBehaviour, IGun
 
         if(Physics.Raycast(ray, out hit, Atrributes.Range))
         { 
-            Debug.Log(hit.transform.tag);      
         }
 
         if(hit.transform != null)

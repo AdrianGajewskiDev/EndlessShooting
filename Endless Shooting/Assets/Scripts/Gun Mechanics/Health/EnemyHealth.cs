@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] int health = 5;
+    
     Animator anim;
 
     public void GiveDamageToEnemy(int amount)
@@ -25,8 +26,8 @@ public class EnemyHealth : MonoBehaviour
             anim.SetBool("Die", true);
             var speed = GetComponent<NavMeshAgent>();
             speed.speed = 0;
+            GetComponent<EnemyAI>().enabled = false;
             Destroy(gameObject, 5);
         }
-        Debug.Log(health);
     }
 }

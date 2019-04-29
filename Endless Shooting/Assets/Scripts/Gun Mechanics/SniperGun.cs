@@ -156,7 +156,6 @@ public class SniperGun : MonoBehaviour, IGun
 
         if(Physics.Raycast(ray, out hit, Atributes.Range))
         { 
-            Debug.Log(hit.transform.tag);      
         }
 
         if(hit.transform != null)

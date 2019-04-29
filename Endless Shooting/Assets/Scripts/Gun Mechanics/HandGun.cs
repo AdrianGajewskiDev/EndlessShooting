@@ -54,12 +54,6 @@ public class HandGun : MonoBehaviour, IGun
                     }  
                 }
             }    
-            else
-            {
-                Debug.Log("No Ammo");
-            }
-
-            Debug.Log("Done");
         }
     }
 
@@ -110,6 +104,7 @@ public class HandGun : MonoBehaviour, IGun
     void Start()
     {
         Atrributes.Animation = GetComponentInParent<Animation>();
+        Atrributes.Crosshair.SetActive(true);
     }
 
     void Awake()
@@ -134,7 +129,7 @@ public class HandGun : MonoBehaviour, IGun
 
         if(Physics.Raycast(ray, out hit, Atrributes.Range))
         { 
-            Debug.Log(hit.transform.tag);      
+            
         }
 
         if(hit.transform != null)
