@@ -31,8 +31,4 @@ public class PlayerHealth : MonoBehaviour
     {
         StartCoroutine(AddHealth());
     }
-    void Update()
-    {
-        Debug.Log(Health);
-    }
 }

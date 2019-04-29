@@ -12,4 +12,6 @@ public class InputController : MonoBehaviour
     public static bool Rifle;
     public static bool LaserGun;
     public static bool SniperGun;
+
+    public static bool Granade;
 }

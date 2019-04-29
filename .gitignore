@@ -26,6 +26,8 @@ ExportedObj/
 *.meta
 *.mat
 *.wav
+*.obj
+*.mtl
 *.anim
 *.unity
 *.prefab

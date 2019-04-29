@@ -12,6 +12,7 @@ public class WeaponSwitcher : MonoBehaviour
         InputController.Rifle = Input.GetKeyDown(KeyCode.Alpha2);
         InputController.LaserGun = Input.GetKeyDown(KeyCode.Alpha3);
         InputController.SniperGun = Input.GetKeyDown(KeyCode.Alpha4);
+        InputController.Granade = Input.GetKeyDown(KeyCode.G);
         SwitchWeapon();
     }
 
@@ -23,6 +24,7 @@ public class WeaponSwitcher : MonoBehaviour
             weapons[1].SetActive(false);
             weapons[2].SetActive(false);
             weapons[3].SetActive(false);
+            weapons[4].SetActive(false);
         }
         
         if(InputController.Rifle)
@@ -31,6 +33,7 @@ public class WeaponSwitcher : MonoBehaviour
             weapons[1].SetActive(true);
             weapons[2].SetActive(false);
             weapons[3].SetActive(false);
+            weapons[4].SetActive(false);
         }
 
         if(InputController.LaserGun)
@@ -39,6 +42,7 @@ public class WeaponSwitcher : MonoBehaviour
             weapons[1].SetActive(false);
             weapons[2].SetActive(true);
             weapons[3].SetActive(false);
+            weapons[4].SetActive(false);
         }
 
         if(InputController.SniperGun)
@@ -47,6 +51,16 @@ public class WeaponSwitcher : MonoBehaviour
             weapons[1].SetActive(false);
             weapons[2].SetActive(false);
             weapons[3].SetActive(true);
+            weapons[4].SetActive(false);
+        }
+
+        if(InputController.Granade)
+        {
+            weapons[0].SetActive(false);
+            weapons[1].SetActive(false);
+            weapons[2].SetActive(false);
+            weapons[3].SetActive(false);
+            weapons[4].SetActive(true);
         }
     }
 }

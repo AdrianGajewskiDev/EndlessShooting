@@ -9,6 +9,7 @@ public class UIIconsController : MonoBehaviour
     public Image SMGGunIcon;
     public Image LaserGunIcon;
     public Image SniperGunIcon;
+    public Image GrenadeIcon;
 
     public Image[] bloodEffect;
 
@@ -24,7 +25,6 @@ public class UIIconsController : MonoBehaviour
     //  Update is called once per frame
     void Update()
     {
-        Debug.Log(amount);
 
         if(PlayerHealth.Health >= 25)
             amount = DamageAmount.none;
@@ -44,6 +44,8 @@ public class UIIconsController : MonoBehaviour
                 SMGGunIcon.gameObject.SetActive(false);
                 SniperGunIcon.gameObject.SetActive(false);
                 HandGunIcon.gameObject.SetActive(true);
+                GrenadeIcon.gameObject.SetActive(false);
+
             }break;
 
             case GunType.SMGGun:
@@ -52,6 +54,7 @@ public class UIIconsController : MonoBehaviour
                 HandGunIcon.gameObject.SetActive(false);
                 SniperGunIcon.gameObject.SetActive(false);
                 SMGGunIcon.gameObject.SetActive(true);
+                GrenadeIcon.gameObject.SetActive(false);
             }break;
 
             case GunType.LaserGun:
@@ -60,6 +63,7 @@ public class UIIconsController : MonoBehaviour
                 HandGunIcon.gameObject.SetActive(false);
                 SniperGunIcon.gameObject.SetActive(false);
                 SMGGunIcon.gameObject.SetActive(false);
+                GrenadeIcon.gameObject.SetActive(false);
             }break;
 
             case GunType.Sniper:
@@ -68,6 +72,16 @@ public class UIIconsController : MonoBehaviour
                 HandGunIcon.gameObject.SetActive(false);
                 SniperGunIcon.gameObject.SetActive(true);
                 SMGGunIcon.gameObject.SetActive(false);
+                GrenadeIcon.gameObject.SetActive(false);
+            }break;
+
+            case GunType.Granade:
+            {
+                LaserGunIcon.gameObject.SetActive(false);
+                HandGunIcon.gameObject.SetActive(false);
+                SniperGunIcon.gameObject.SetActive(false);
+                SMGGunIcon.gameObject.SetActive(false);
+                GrenadeIcon.gameObject.SetActive(true);
             }break;
         }
 

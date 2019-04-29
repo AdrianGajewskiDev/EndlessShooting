@@ -33,6 +33,10 @@ public class UIAmmoController : MonoBehaviour
         {
             CurrentWeaponScriptHolder = SniperWeaponScriptHolder;
         }
+        else if(Type == GunType.Granade)
+        {
+            CurrentWeaponScriptHolder = null;
+        }
 
         switch(Type)
         {
@@ -65,6 +69,11 @@ public class UIAmmoController : MonoBehaviour
             {
                 var script = CurrentWeaponScriptHolder.GetComponent<SniperGun>();
                 AmmoCounter.text = script.Atributes.CurrentAmmoInCip + "/" + script.Atributes.MaxAmmo;
+            }break;
+
+            case GunType.Granade:
+            {
+                AmmoCounter.text = "-/-";
             }break;
         }
         
