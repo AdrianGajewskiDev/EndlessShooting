@@ -52,7 +52,6 @@ public class EnemyAI : MonoBehaviour
         if(Atributes.CurrentAmmoInCip < 1 )
             StartCoroutine(Reload());
 
-
         Attack();
     }
     void SetDestination()

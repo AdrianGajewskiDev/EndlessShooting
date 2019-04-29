@@ -10,9 +10,32 @@ public class UIIconsController : MonoBehaviour
     public Image LaserGunIcon;
     public Image SniperGunIcon;
 
+    public Image[] bloodEffect;
+
+    private DamageAmount amount;
+    enum DamageAmount
+    {
+        none,
+        small,
+        medium,
+        large
+    }
+
     //  Update is called once per frame
     void Update()
     {
+        Debug.Log(amount);
+
+        if(PlayerHealth.Health >= 25)
+            amount = DamageAmount.none;
+        else if(PlayerHealth.Health <= 20 && PlayerHealth.Health >= 15)
+            amount = DamageAmount.small;
+        else if(PlayerHealth.Health < 15 && PlayerHealth.Health >= 10)
+            amount = DamageAmount.medium;
+        else if(PlayerHealth.Health < 10 && PlayerHealth.Health >= 5)
+            amount = DamageAmount.large;
+        
+
         switch(UIAmmoController.Type)
         {
             case GunType.HandGun:
@@ -47,5 +70,39 @@ public class UIIconsController : MonoBehaviour
                 SMGGunIcon.gameObject.SetActive(false);
             }break;
         }
+
+        switch(amount)
+        {
+            case DamageAmount.none:
+            {
+                foreach(var img in bloodEffect)
+                {
+                    img.gameObject.SetActive(false);
+                }
+            }break;
+
+            case DamageAmount.small:
+            {
+                bloodEffect[0].gameObject.SetActive(true);
+                bloodEffect[1].gameObject.SetActive(false);
+                bloodEffect[2].gameObject.SetActive(false);
+            }break;
+
+            case DamageAmount.medium:
+            {
+                bloodEffect[0].gameObject.SetActive(false);
+                bloodEffect[1].gameObject.SetActive(true);
+                bloodEffect[2].gameObject.SetActive(false);
+            }break;
+
+            case DamageAmount.large:
+            {
+                bloodEffect[0].gameObject.SetActive(false);
+                bloodEffect[1].gameObject.SetActive(false);
+                bloodEffect[2].gameObject.SetActive(true);
+            }break;
+        }
     }
+
+   
 }
