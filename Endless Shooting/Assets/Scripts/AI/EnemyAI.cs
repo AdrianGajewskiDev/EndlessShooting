@@ -6,30 +6,34 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] Transform[] waypoints;
-    [SerializeField] float rotationSpeed = 5f; 
+    public float rotationSpeed = 5f; 
     [SerializeField] ParticleSystem muzzle;
     float timeToFireAllowed = 0;
     [SerializeField] GunAtrributes Atributes;
     int currentWaypontIndex;
     NavMeshAgent NMAgent;
-    bool InAttackMode;
+    public bool InAttackMode;
     bool Patroling = true;
+    public static bool AiEnemy;
     Animator anim;
-    Transform target;
+    public Transform target;
     RaycastHit hit;
     Rigidbody rBody;
+    public bool EnemySoldier;
+    public string tagToSearch;
+    string playerTag = "Player";
 
     void Start()
     {
-        NMAgent = this.GetComponent<NavMeshAgent>();
+        NMAgent = this.GetComponentInParent<NavMeshAgent>();
         anim = this.GetComponentInChildren<Animator>();
-        rBody = this.GetComponent<Rigidbody>();
+        rBody = this.GetComponentInParent<Rigidbody>();
 
         if(NMAgent == null)
             Debug.LogError("No mesh agent at" + gameObject.name);
 
         if(Patroling)
-        {
+        {   
             currentWaypontIndex = Random.Range(0, waypoints.Length);
             NMAgent.SetDestination(waypoints[currentWaypontIndex].transform.position);
         }
@@ -51,42 +55,42 @@ public class EnemyAI : MonoBehaviour
         }
         if(Atributes.CurrentAmmoInCip < 1 )
             StartCoroutine(Reload());
+        
+        if(InAttackMode == false)
+            SetDestination();
 
+        CheckForTarget();
+        Debug.Log(gameObject.name + " in attack mode: " + InAttackMode);
         Attack();
     }
     void SetDestination()
     {
-        currentWaypontIndex = Random.Range(0, waypoints.Length);
-        NMAgent.SetDestination(waypoints[currentWaypontIndex].transform.position);
+        if(NMAgent.hasPath == false)
+        {
+            currentWaypontIndex = Random.Range(0, waypoints.Length);
+            NMAgent.SetDestination(waypoints[currentWaypontIndex].transform.position);
+        }
+        
     }
 
-    void OnTriggerEnter(Collider col)
+    void CheckForTarget()
     {
-        if(col.CompareTag("Player"))
+        if(InAttackMode == true)
         {
-            GetComponent<SphereCollider>().radius = 10;
-            InAttackMode = true;
-            target = col.transform;
             NMAgent.SetDestination(target.position);
         }
+        else if(InAttackMode == false)
+        {
+            Patroling = true;
+            NMAgent.speed = 3.5f;
+            anim.SetBool("Attacking", InAttackMode);
+            SetDestination();
+        }
     }
-
-    void OnTriggerExit(Collider col)
-    {
-        GetComponent<SphereCollider>().radius = 5;
-        Patroling = true;
-        InAttackMode = false;
-        NMAgent.speed = 3.5f;
-        anim.SetBool("Attacking", InAttackMode);
-        target = null;
-        SetDestination();
-
-    }
-
     void Attack()
     {
         if(InAttackMode)
-        {
+        {   
             var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             Patroling = false;
@@ -106,13 +110,32 @@ public class EnemyAI : MonoBehaviour
             {
                 Debug.Log("EnemyTagging " + hit.transform.tag);
 
-                if(hit.transform.CompareTag("Player"))
-                    Shoot();
+                if(EnemySoldier == true)
+                {
+                    if(hit.transform.CompareTag("Player") || hit.transform.CompareTag(tagToSearch))
+                    {
+                        InAttackMode = true;
+                        target = hit.transform;
+                        Shoot(true);
+                    }
+                }
+                else if(EnemySoldier == false)
+                {
+                    if(hit.transform.CompareTag(tagToSearch))
+                    {
+                        InAttackMode = true;
+                        target = hit.transform;
+                        Shoot(false);
+                    }
+                }
+                    
             }
         }
+
+        InAttackMode = false;
     }
 
-    void Shoot()
+    void Shoot(bool isenemy)
     {
         if(Atributes.CurrentAmmoInCip >= 1 && Time.time >= timeToFireAllowed)
         {
@@ -122,9 +145,25 @@ public class EnemyAI : MonoBehaviour
             timeToFireAllowed = Time.time + 1 / Atributes.RateOfFire;
             SpawnMuzzle();
 
-            if(hit.transform.GetComponent<PlayerHealth>() != null)
+            if(isenemy == true)
             {
-                hit.transform.GetComponent<PlayerHealth>().GivePlayerDamage(Atributes.Damage);
+                if(AiEnemy == true && hit.transform.GetComponent<PlayerTeamSoldierHealth>() != null)
+                {
+                    hit.transform.GetComponent<PlayerTeamSoldierHealth>().GiveDamageToEnemy(Atributes.Damage);                    
+                }
+                
+                if(AiEnemy == false && hit.transform.GetComponent<PlayerHealth>() != null)
+                {
+                    hit.transform.GetComponent<PlayerHealth>().GivePlayerDamage(Atributes.Damage);
+                }
+            }
+
+            else if(isenemy == false)
+            {
+                if(hit.transform.GetComponent<EnemyHealth>() != null)
+                {
+                    hit.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(Atributes.Damage);
+                } 
             }
         }
     }

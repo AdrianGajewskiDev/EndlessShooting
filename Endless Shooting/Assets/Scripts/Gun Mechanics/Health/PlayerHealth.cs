@@ -17,7 +17,7 @@ public class PlayerHealth : MonoBehaviour
         { 
             if (Health < 25)
             { 
-                Health += 3; 
+                Health += 5; 
                 yield return new WaitForSeconds(1);
             } 
             else 

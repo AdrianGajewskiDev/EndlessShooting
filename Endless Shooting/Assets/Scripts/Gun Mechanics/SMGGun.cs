@@ -146,7 +146,8 @@ public class SMGGun : MonoBehaviour, IGun
 
         if(ets != null)
         {
-            Instantiate(ets, hit.point, hit.transform.rotation);
+            if(hit.point != null)
+                Instantiate(ets, hit.point, hit.transform.rotation);
         }
 
         Destroy(ets);
