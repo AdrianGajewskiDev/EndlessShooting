@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IHealth
 {
     public static int Health = 25;
 
-    public void GivePlayerDamage(int amount)
+    public void GetDamage(int amount)
     {
-        Health -= amount;
+        Health -= amount;    
+    }
+
+    public bool IsDead()
+    {
+        if(Health <= 0)
+            return true;
+        else
+            return false;
     }
 
     IEnumerator AddHealth()

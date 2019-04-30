@@ -25,7 +25,7 @@ public class LaserGun : MonoBehaviour, IGun
 
     IEnumerator GiveDamage_Laser(RaycastHit hit, int amount)
     {
-        hit.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(amount);
+        hit.transform.GetComponent<EnemyHealth>().GetDamage(amount);
         yield return new WaitForSeconds(2);
     }
     public IEnumerator Reload()

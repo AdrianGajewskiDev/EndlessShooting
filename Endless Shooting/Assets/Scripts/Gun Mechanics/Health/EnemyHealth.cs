@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour, IHealth
 {
     [SerializeField] int health = 5;
     
     Animator anim;
 
-    public void GiveDamageToEnemy(int amount)
+    public void GetDamage(int amount)
     {
         health -= amount;
+    }
+
+    public bool IsDead()
+    {
+        if(health <= 0)
+            return true;
+        else
+            return false;
     }
 
     void Awake()

@@ -13,8 +13,8 @@ public class EnemyAI : MonoBehaviour
     int currentWaypontIndex;
     NavMeshAgent NMAgent;
     public bool InAttackMode;
+    public bool isDead = false;
     bool Patroling = true;
-    public static bool AiEnemy;
     Animator anim;
     public Transform target;
     RaycastHit hit;
@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     public bool EnemySoldier;
     public string tagToSearch;
     string playerTag = "Player";
+    float distance;
 
     void Start()
     {
@@ -58,9 +59,9 @@ public class EnemyAI : MonoBehaviour
         
         if(InAttackMode == false)
             SetDestination();
+        
+        Debug.Log(InAttackMode);
 
-        CheckForTarget();
-        Debug.Log(gameObject.name + " in attack mode: " + InAttackMode);
         Attack();
     }
     void SetDestination()
@@ -73,20 +74,6 @@ public class EnemyAI : MonoBehaviour
         
     }
 
-    void CheckForTarget()
-    {
-        if(InAttackMode == true)
-        {
-            NMAgent.SetDestination(target.position);
-        }
-        else if(InAttackMode == false)
-        {
-            Patroling = true;
-            NMAgent.speed = 3.5f;
-            anim.SetBool("Attacking", InAttackMode);
-            SetDestination();
-        }
-    }
     void Attack()
     {
         if(InAttackMode)
@@ -99,6 +86,12 @@ public class EnemyAI : MonoBehaviour
             anim.SetBool("Attacking", InAttackMode);
 
         }
+        else if(InAttackMode == false)
+        {
+            Patroling = true;
+            NMAgent.speed = 3.5f;
+            anim.SetBool("Attacking", InAttackMode);
+        }
         
     }
 
@@ -106,65 +99,103 @@ public class EnemyAI : MonoBehaviour
     {
         if(Physics.Raycast(Atributes.ShotPoint.transform.position, Atributes.ShotPoint.TransformDirection(Vector3.forward), out hit, Atributes.Range))
         {
+            Transform targetToShot = null;
+
             if(hit.transform != null)
             {
-                Debug.Log("EnemyTagging " + hit.transform.tag);
-
                 if(EnemySoldier == true)
                 {
-                    if(hit.transform.CompareTag("Player") || hit.transform.CompareTag(tagToSearch))
+                    if(hit.transform.CompareTag(playerTag) || hit.transform.CompareTag(tagToSearch))
                     {
-                        InAttackMode = true;
-                        target = hit.transform;
-                        Shoot(true);
+                        targetToShot = hit.transform;
+                        distance = Vector3.Distance(transform.position, targetToShot.position);
+                        if(distance >= 20)
+                        {
+                            InAttackMode = false;
+                            targetToShot = null;
+                            distance = 0;
+                            return;
+                        }
+                        else
+                        {
+                            InAttackMode = true;
+                            target = hit.transform;
+                            Shoot(EnemySoldier);
+                        }
                     }
                 }
                 else if(EnemySoldier == false)
                 {
                     if(hit.transform.CompareTag(tagToSearch))
                     {
-                        InAttackMode = true;
-                        target = hit.transform;
-                        Shoot(false);
+                        targetToShot = hit.transform;
+                        distance = Vector3.Distance(transform.position, targetToShot.position);
+                        if(distance >= 20)
+                        {
+                            InAttackMode = false;
+                            distance = 0;
+                            targetToShot = null;
+                            return;
+                        }
+                        else
+                        {
+                            InAttackMode = true;
+                            target = hit.transform;
+                            distance = Vector3.Distance(transform.position, hit.transform.position);
+                            Shoot(false);
+                        }
                     }
-                }
-                    
+                }        
             }
         }
 
-        InAttackMode = false;
+        Debug.Log(distance);
+
+
+        if(target != null && distance >= 20)
+        {
+            Debug.Log(Vector3.Distance(transform.position, target.position));
+            InAttackMode = false;
+            target = null;
+        }
+
     }
 
     void Shoot(bool isenemy)
     {
         if(Atributes.CurrentAmmoInCip >= 1 && Time.time >= timeToFireAllowed)
         {
+            IHealth health = null;
+            
+            switch(isenemy)
+            {
+                case true:
+                {
+                    if(hit.transform.GetComponent<PlayerHealth>() == null)
+                        health = hit.transform.GetComponent<PlayerTeamSoldierHealth>();
+                    else
+                        health = hit.transform.GetComponent<PlayerHealth>();
+                }break;
+
+                case false:
+                {
+                    health = hit.transform.GetComponent<EnemyHealth>();
+                }break;
+            }
+
+            if(health.IsDead() == true)
+            {
+                InAttackMode = false;
+                return;
+            }
+
+            health.GetDamage(Atributes.Damage);
             Debug.Log("Shooting");
             Atributes.ShotSound.Play();
             Atributes.CurrentAmmoInCip -= 1;
             timeToFireAllowed = Time.time + 1 / Atributes.RateOfFire;
             SpawnMuzzle();
 
-            if(isenemy == true)
-            {
-                if(AiEnemy == true && hit.transform.GetComponent<PlayerTeamSoldierHealth>() != null)
-                {
-                    hit.transform.GetComponent<PlayerTeamSoldierHealth>().GiveDamageToEnemy(Atributes.Damage);                    
-                }
-                
-                if(AiEnemy == false && hit.transform.GetComponent<PlayerHealth>() != null)
-                {
-                    hit.transform.GetComponent<PlayerHealth>().GivePlayerDamage(Atributes.Damage);
-                }
-            }
-
-            else if(isenemy == false)
-            {
-                if(hit.transform.GetComponent<EnemyHealth>() != null)
-                {
-                    hit.transform.GetComponent<EnemyHealth>().GiveDamageToEnemy(Atributes.Damage);
-                } 
-            }
         }
     }
 
@@ -199,5 +230,12 @@ public class EnemyAI : MonoBehaviour
         muzzle.Play();
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == gameObject.tag)
+        {
+            Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), collision.gameObject.GetComponent<BoxCollider>());
+        }
+    }
 
 }

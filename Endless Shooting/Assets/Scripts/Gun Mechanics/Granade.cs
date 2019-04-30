@@ -80,10 +80,10 @@ public class Granade : MonoBehaviour
                 rb.AddExplosionForce(damage, transform.position, range);
             }
 
-            EnemyHealth eh = col.GetComponent<EnemyHealth>();
+            IHealth eh = col.GetComponent<EnemyHealth>();
             if(eh != null)
             {
-                eh.GiveDamageToEnemy(damage);
+                eh.GetDamage(damage);
             }
         }
     }
