@@ -5,24 +5,35 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Navigation")]
     [SerializeField] Transform[] waypoints;
-    public float rotationSpeed = 5f; 
-    [SerializeField] ParticleSystem muzzle;
-    float timeToFireAllowed = 0;
-    [SerializeField] GunAtrributes Atributes;
-    int currentWaypontIndex;
+    public Transform target;
+    Rigidbody rBody;
     NavMeshAgent NMAgent;
+    bool Patroling = true;
+    string playerTag = "Player";
+    public string tagToSearch;
+    float distance;
+    int currentWaypontIndex;
+
+
+    [Header("Attacking")]
+    [SerializeField] ParticleSystem muzzle;
+    [SerializeField] GunAtrributes Atributes;
+    public float rotationSpeed = 10f; 
+    float timeToFireAllowed = 0;
     public bool InAttackMode;
     public bool isDead = false;
-    bool Patroling = true;
+
+    [Header("Other")]
     Animator anim;
-    public Transform target;
     RaycastHit hit;
-    Rigidbody rBody;
     public bool EnemySoldier;
-    public string tagToSearch;
-    string playerTag = "Player";
-    float distance;
+
+    [Header("Field of view")]
+    [SerializeField] float maxAngle;
+    [SerializeField] float maxRadius;
+
 
     void Start()
     {
@@ -62,7 +73,11 @@ public class EnemyAI : MonoBehaviour
         
         Debug.Log(InAttackMode);
 
+        InAttackMode = InFOV(this.transform, maxAngle, maxRadius);
+
         Attack();
+
+        Debug.Log(target);
     }
     void SetDestination()
     {
@@ -73,17 +88,22 @@ public class EnemyAI : MonoBehaviour
         }
         
     }
-
+    void RotateToPlayer(Transform target)
+    {
+        var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
     void Attack()
     {
         if(InAttackMode)
-        {   
-            var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            Patroling = false;
-            NMAgent.speed = 0;
-            InAttackMode = true;
-            anim.SetBool("Attacking", InAttackMode);
+        {   if(target != null)
+            {
+                RotateToPlayer(target);
+                Patroling = false;
+                NMAgent.speed = 0;
+                InAttackMode = true;
+                anim.SetBool("Attacking", InAttackMode);
+            }
 
         }
         else if(InAttackMode == false)
@@ -229,10 +249,77 @@ public class EnemyAI : MonoBehaviour
     {
         muzzle.Play();
     }
+  
+    //It's a function to make field of view for enemy to recognise player or enemy in front of him
+    private void OnDrawGizmos()
+    {     
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, maxRadius);
+
+        Vector3 line1 = Quaternion.AngleAxis(maxAngle, transform.up) * transform.forward * maxRadius;
+        Vector3 line2 = Quaternion.AngleAxis(-maxAngle, transform.up) * transform.forward * maxRadius;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, line1);
+        Gizmos.DrawRay(transform.position, line2);
+
+        Gizmos.color = Color.green;
+        if(target != null)
+            Gizmos.DrawRay(transform.position, (target.position - transform.position).normalized * maxRadius);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawRay(transform.position, transform.forward * maxRadius);
+    }
+
+    public bool InFOV(Transform checkingObject,float maxAngle, float maxRadius)
+    {
+        Collider[] overlaps = Physics.OverlapSphere(checkingObject.position, maxRadius);
+        bool isen = EnemySoldier;
+
+        foreach(Collider col in overlaps)
+        {
+            if(col != null)
+            {
+                if(isen == true)
+                {
+                    if(col.transform.CompareTag(tagToSearch) || col.transform.CompareTag(playerTag))
+                    {
+                        var targetAI = col.transform;
+                        Vector3 directionBetween = (targetAI.position - checkingObject.position).normalized;
+                        directionBetween.y *= 0;
+                        float angle = Vector3.Angle(checkingObject.forward, directionBetween);
+
+                        if(angle <= maxAngle)
+                        {
+                            RotateToPlayer(targetAI);
+                        }
+                    }
+                }
+
+                if(isen == false)
+                {
+                    if(col.transform.CompareTag(tagToSearch))
+                    {
+                        var enemyPlayer = col.transform;
+                        Vector3 directionBetween = (enemyPlayer.position - checkingObject.position).normalized;
+                        directionBetween.y *= 0;
+                        float angle = Vector3.Angle(checkingObject.forward, directionBetween);
+
+                        if(angle <= maxAngle)
+                        {
+                            RotateToPlayer(enemyPlayer);
+                        }
+                    }
+                }   
+            } 
+        }
+
+        return false;
+    }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == gameObject.tag)
+        if (collision.gameObject.layer == gameObject.layer)
         {
             Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), collision.gameObject.GetComponent<BoxCollider>());
         }
