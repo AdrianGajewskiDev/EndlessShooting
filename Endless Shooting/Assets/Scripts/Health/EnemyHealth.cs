@@ -29,7 +29,7 @@ public class EnemyHealth : MonoBehaviour, IHealth
 
         int index = Random.Range(0, spawnPoints.Length);
         var spawnPoint = spawnPoints[index];
-        
+        GlobalScore.FriendScore += 1;
         GetComponent<EnemyAI>().enabled = true;
         GetComponent<EnemyAI>().target = null;
         transform.position = spawnPoint.position;
@@ -56,7 +56,6 @@ public class EnemyHealth : MonoBehaviour, IHealth
             var speed = GetComponent<NavMeshAgent>();
             speed.speed = 0;
             GetComponent<EnemyAI>().enabled = false;
-            await Task.Delay(2000);
             Respawn();
         }
     }

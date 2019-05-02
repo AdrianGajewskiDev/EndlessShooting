@@ -16,7 +16,6 @@ public class EnemyAI : MonoBehaviour
     float distance;
     int currentWaypontIndex;
 
-
     [Header("Attacking")]
     [SerializeField] ParticleSystem muzzle;
     [SerializeField] GunAtrributes Atributes;
@@ -224,7 +223,6 @@ public class EnemyAI : MonoBehaviour
                     health = hit.transform.GetComponent<EnemyHealth>();
                 }break;
             }
-
             if(health.IsDead() == true)
             {
                 InAttackMode = false;

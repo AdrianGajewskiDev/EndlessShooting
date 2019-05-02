@@ -26,12 +26,13 @@ public class PlayerTeamSoldierHealth : MonoBehaviour, IHealth
     {
         int index = Random.Range(0, spawnPoints.Length);
         var spawnPoint = spawnPoints[index];
-
+        anim.SetBool("Die", false);
         transform.position = spawnPoint.position;
         GetComponent<EnemyAI>().enabled = true;
         GetComponent<EnemyAI>().target = null;
         var speed = GetComponent<NavMeshAgent>();
         speed.speed = 3.5f;
+        GlobalScore.EnemyScore += 1;
         health = 15;
     }
 
@@ -45,7 +46,7 @@ public class PlayerTeamSoldierHealth : MonoBehaviour, IHealth
         DieAndWaitToRespawn();
     }
 
-    async void  DieAndWaitToRespawn()
+    async void DieAndWaitToRespawn()
     {
         if(health < 1)
         {
@@ -53,7 +54,6 @@ public class PlayerTeamSoldierHealth : MonoBehaviour, IHealth
             var speed = GetComponent<NavMeshAgent>();
             speed.speed = 0;
             GetComponent<EnemyAI>().enabled = false;
-            await Task.Delay(2000);
             Respawn();
         }
     }
