@@ -24,6 +24,8 @@ public class EnemyAI : MonoBehaviour
     float timeToFireAllowed = 0;
     public bool InAttackMode;
     public bool isDead = false;
+    [HideInInspector] Transform attacker = null;
+    [HideInInspector] public bool isHited = false;
 
     [Header("Other")]
     Animator anim;
@@ -55,6 +57,11 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        if(isHited == true)
+        {
+            RotateToPlayer(attacker);
+        }
+
         if (!NMAgent.pathPending && Patroling)
         {
             if (NMAgent.remainingDistance <= NMAgent.stoppingDistance)
@@ -65,6 +72,13 @@ public class EnemyAI : MonoBehaviour
                 }
             }
         }
+
+        if(isDead == true)
+        {
+            SetDestination();
+            isDead = false;
+        }
+
         if(Atributes.CurrentAmmoInCip < 1 )
             StartCoroutine(Reload());
         
@@ -103,6 +117,7 @@ public class EnemyAI : MonoBehaviour
                 NMAgent.speed = 0;
                 InAttackMode = true;
                 anim.SetBool("Attacking", InAttackMode);
+                Shoot(EnemySoldier);
             }
 
         }
@@ -140,6 +155,13 @@ public class EnemyAI : MonoBehaviour
                         {
                             InAttackMode = true;
                             target = hit.transform;
+                            
+                            if(hit.transform.CompareTag(tagToSearch))
+                            {
+                                hit.transform.GetComponent<EnemyAI>().isHited = true;
+                                hit.transform.GetComponent<EnemyAI>().attacker = this.transform;
+                            }
+                            
                             Shoot(EnemySoldier);
                         }
                     }
@@ -291,7 +313,9 @@ public class EnemyAI : MonoBehaviour
 
                         if(angle <= maxAngle)
                         {
+                            target = targetAI;
                             RotateToPlayer(targetAI);
+                            return true;
                         }
                     }
                 }
@@ -307,7 +331,9 @@ public class EnemyAI : MonoBehaviour
 
                         if(angle <= maxAngle)
                         {
+                            target = enemyPlayer;
                             RotateToPlayer(enemyPlayer);
+                            return true;
                         }
                     }
                 }   

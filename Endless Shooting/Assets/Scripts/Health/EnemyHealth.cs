@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour, IHealth
 {
     [SerializeField] int health = 5;
-    
+    [SerializeField] Transform[] spawnPoints;
     Animator anim;
 
     public void GetDamage(int amount)
@@ -22,6 +23,21 @@ public class EnemyHealth : MonoBehaviour, IHealth
             return false;
     }
 
+    public void Respawn()
+    {
+        health = 15;
+
+        int index = Random.Range(0, spawnPoints.Length);
+        var spawnPoint = spawnPoints[index];
+        
+        GetComponent<EnemyAI>().enabled = true;
+        GetComponent<EnemyAI>().target = null;
+        transform.position = spawnPoint.position;
+        anim.SetBool("Die", false);
+        GetComponent<EnemyAI>().isDead = true;
+        GetComponent<NavMeshAgent>().speed = 3.5f;
+    }
+
     void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -29,13 +45,19 @@ public class EnemyHealth : MonoBehaviour, IHealth
 
     void Update()
     {
+        DieAndWaitToRespawn();
+    }
+
+    async void  DieAndWaitToRespawn()
+    {
         if(health < 1)
         {
             anim.SetBool("Die", true);
             var speed = GetComponent<NavMeshAgent>();
             speed.speed = 0;
             GetComponent<EnemyAI>().enabled = false;
-            Destroy(gameObject, 5);
+            await Task.Delay(2000);
+            Respawn();
         }
     }
 }

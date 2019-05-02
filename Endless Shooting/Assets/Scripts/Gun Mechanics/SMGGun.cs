@@ -76,7 +76,7 @@ public class SMGGun : MonoBehaviour, IGun
                 
             }
         }
-        else if(InputController.Left_Mouse)
+        else if(!InputController.Left_Mouse)
         {
             Atrributes.Animator.SetBool("Shoot", false);
         }

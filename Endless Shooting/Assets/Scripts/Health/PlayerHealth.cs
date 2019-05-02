@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour, IHealth
 {
     public static int Health = 25;
+    [SerializeField] Transform[] spawnPoints;
+
 
     public void GetDamage(int amount)
     {
@@ -17,6 +19,10 @@ public class PlayerHealth : MonoBehaviour, IHealth
             return true;
         else
             return false;
+    }
+
+    public void Respawn()
+    {
     }
 
     IEnumerator AddHealth()
