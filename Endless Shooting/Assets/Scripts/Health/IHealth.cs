@@ -7,4 +7,5 @@ public interface IHealth
     bool IsDead();
     void GetDamage(int amount);
     void Respawn();
+    void Die();
 }

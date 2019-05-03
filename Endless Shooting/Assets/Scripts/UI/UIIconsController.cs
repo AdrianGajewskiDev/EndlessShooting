@@ -26,14 +26,14 @@ public class UIIconsController : MonoBehaviour
     void Update()
     {
 
-        if(PlayerHealth.Health >= 25)
-            amount = DamageAmount.none;
-        else if(PlayerHealth.Health <= 20 && PlayerHealth.Health >= 15)
-            amount = DamageAmount.small;
-        else if(PlayerHealth.Health < 15 && PlayerHealth.Health >= 10)
-            amount = DamageAmount.medium;
-        else if(PlayerHealth.Health < 10 && PlayerHealth.Health >= 5)
-            amount = DamageAmount.large;
+        // if(PlayerHealth.Health >= 25)
+        //     amount = DamageAmount.none;
+        // else if(PlayerHealth.Health <= 20 && PlayerHealth.Health >= 15)
+        //     amount = DamageAmount.small;
+        // else if(PlayerHealth.Health < 15 && PlayerHealth.Health >= 10)
+        //     amount = DamageAmount.medium;
+        // else if(PlayerHealth.Health < 10 && PlayerHealth.Health >= 5)
+        //     amount = DamageAmount.large;
         
 
         switch(UIAmmoController.Type)

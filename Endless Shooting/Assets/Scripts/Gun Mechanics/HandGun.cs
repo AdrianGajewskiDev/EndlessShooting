@@ -15,8 +15,8 @@ public class HandGun : MonoBehaviour, IGun
     {
         if(ray.transform != null)
         {
-            if(ray.transform.GetComponent<EnemyHealth>() != null)
-                ray.transform.GetComponent<EnemyHealth>().GetDamage(damageAmount);
+            if(ray.transform.GetComponent<AIHealth>() != null)
+                ray.transform.GetComponent<AIHealth>().GetDamage(damageAmount);
         }
         
     }

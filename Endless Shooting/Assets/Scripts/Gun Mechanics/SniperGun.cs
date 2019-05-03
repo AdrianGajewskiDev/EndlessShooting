@@ -21,9 +21,9 @@ public class SniperGun : MonoBehaviour, IGun
     {
         if(ray.transform != null)
         {
-            if(ray.transform.GetComponent<EnemyHealth>() != null)
+            if(ray.transform.GetComponent<AIHealth>() != null)
             {
-                ray.transform.GetComponent<EnemyHealth>().GetDamage(damageAmount);
+                ray.transform.GetComponent<AIHealth>().GetDamage(damageAmount);
             }
         }
     }

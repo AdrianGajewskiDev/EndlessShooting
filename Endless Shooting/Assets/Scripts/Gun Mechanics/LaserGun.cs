@@ -16,7 +16,7 @@ public class LaserGun : MonoBehaviour, IGun
     {
         if(ray.transform != null)
         {
-            if(ray.transform.GetComponent<EnemyHealth>() != null)
+            if(ray.transform.GetComponent<AIHealth>() != null)
             {
                 StartCoroutine(GiveDamage_Laser(ray, damageAmount));
             }
@@ -25,7 +25,7 @@ public class LaserGun : MonoBehaviour, IGun
 
     IEnumerator GiveDamage_Laser(RaycastHit hit, int amount)
     {
-        hit.transform.GetComponent<EnemyHealth>().GetDamage(amount);
+        hit.transform.GetComponent<AIHealth>().GetDamage(amount);
         yield return new WaitForSeconds(2);
     }
     public IEnumerator Reload()
