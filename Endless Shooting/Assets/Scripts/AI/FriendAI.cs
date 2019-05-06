@@ -9,6 +9,10 @@ public class FriendAI : AI
     [SerializeField] float maxAngle;
     [SerializeField] LayerMask mask;
 
+    [Header("Attacking")]
+    [SerializeField] GunAtrributes Atributes;
+    bool InAttackMode = false;
+
     void OnDrawGizmos()
     {
         DrawGizmos(transform, maxRadius, maxAngle );
@@ -18,5 +22,14 @@ public class FriendAI : AI
     {
         ScanForTarget<EnemyAI>(transform, mask, maxRadius, maxAngle);
     }
-  
+
+    public override void Shoot()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void GiveDamage(ref RaycastHit hit, int damageAmount)
+    {
+        throw new System.NotImplementedException();
+    }
 }

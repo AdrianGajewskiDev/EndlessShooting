@@ -36,7 +36,6 @@ public class SniperGun : MonoBehaviour, IGun
         {
             if(Atributes.MaxAmmo >= 1 && Atributes.Animator.GetBool("Scope") == false)
             {
-                Debug.Log("Reloading");               
                 Atributes.ReloadSound.Play();
                 Atributes.Animator.SetBool("Reload",true);
                 Atributes.Animator.SetBool("Idle",false);
@@ -61,10 +60,6 @@ public class SniperGun : MonoBehaviour, IGun
                         Atributes.MaxAmmo -= ammoToAdd;
                         Atributes.CurrentAmmoInCip += ammoToAdd;
                     }  
-                }
-                else
-                {
-                    Debug.Log("No Ammo");
                 }
             }
         }
@@ -104,7 +99,6 @@ public class SniperGun : MonoBehaviour, IGun
         {
             Atributes.Animator.SetBool("Shoot", true);
             Atributes.Animator.SetBool("Idle", false);
-            Debug.Log("Shooting");
             Atributes.CurrentAmmoInCip -= 1;
             timeToFireAllowed = Time.time + 1 / Atributes.RateOfFire;
             Atributes.ShotSound.Play();

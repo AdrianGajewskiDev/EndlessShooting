@@ -14,11 +14,7 @@ public class MoveProjectile : MonoBehaviour
         {
             transform.position += transform.forward * (speed * Time.deltaTime);
         }
-        else
-        {
-            Debug.Log("No Speed");
-        }
-
+        
         Destroy(GameObject.Find("Projectile(Clone)"), 10);
         Destroy(GameObject.Find("Hit(Clone)"), 1);
     }

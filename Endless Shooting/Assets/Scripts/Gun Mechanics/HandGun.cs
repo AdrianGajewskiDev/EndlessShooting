@@ -30,7 +30,6 @@ public class HandGun : MonoBehaviour, IGun
             {
 
             
-                Debug.Log("Reloading");
                 Atrributes.Animation.Play("HandGunReload");
                 Atrributes.ReloadSound.Play();
                 GetComponentInParent<HandGun>().enabled = false;
@@ -87,10 +86,6 @@ public class HandGun : MonoBehaviour, IGun
         if(Atrributes.ShotPoint != null)
         {
             vfx = Instantiate(effectToSpawn, Atrributes.ShotPoint.position, Atrributes.ShotPoint.rotation);
-        }
-        else
-        {
-            Debug.Log("No Fire Point!");
         }
     }
 

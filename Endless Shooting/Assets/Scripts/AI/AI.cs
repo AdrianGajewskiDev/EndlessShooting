@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public abstract class AI : MonoBehaviour
@@ -23,7 +24,7 @@ public abstract class AI : MonoBehaviour
     }
     
     //NOTE: Call this inside Update or FixedUpdate function
-    public void ScanForTarget<T> (Transform center, LayerMask l_mask, float maxRadius, float maxAngle)
+    public Transform ScanForTarget<T> (Transform center, LayerMask l_mask, float maxRadius, float maxAngle)
     {
         Collider[] potentialTargets = Physics.OverlapSphere(center.position, maxRadius);
 
@@ -35,14 +36,17 @@ public abstract class AI : MonoBehaviour
                 var target = col.transform;
 
                 if(target != null && IsInLineOfSight(target, center, maxAngle, maxRadius, l_mask))
-                {
-                    center.rotation = RotateToTarget(center, target, 5f);
-                }
+                    return target;
+                else 
+                    return null;
             }
+            
         }
+
+        return null;
     }
 
-    private bool IsInLineOfSight(Transform target, Transform checkingObject, float maxAngle, float range, LayerMask mask)
+    public bool IsInLineOfSight(Transform target, Transform checkingObject, float maxAngle, float range, LayerMask mask)
     {
         Vector3 direction = (target.position - checkingObject.position).normalized;
 
@@ -62,6 +66,14 @@ public abstract class AI : MonoBehaviour
     {   
         var targetRotation = Quaternion.LookRotation(target.transform.position - obj.position);
 
-        return Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+        obj.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+
+        return obj.rotation;
     }
+
+    public abstract void Shoot();
+
+    public abstract void Reload();
+
+    public abstract void GiveDamage(ref RaycastHit hit, int damageAmount);
 }

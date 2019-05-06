@@ -33,10 +33,7 @@ public class LaserGun : MonoBehaviour, IGun
         if(InputController.Reload_Button && Atrributes.CurrentAmmoInCip < Atrributes.ClipSize)
         {
             if(Atrributes.MaxAmmo >= 1)
-            {
-
-            
-                Debug.Log("Reloading");
+            {          
                 Atrributes.Animation.Play("LazerGunReload");
                 Atrributes.ReloadSound.Play();
                 GetComponentInParent<LaserGun>().enabled = false;
@@ -59,13 +56,7 @@ public class LaserGun : MonoBehaviour, IGun
                         Atrributes.CurrentAmmoInCip += ammoToAdd;
                     }  
                 }
-            }    
-            else
-            {
-                Debug.Log("No Ammo");
-            }
-
-            Debug.Log("Done");
+            }   
         }
     }
 
@@ -127,7 +118,6 @@ public class LaserGun : MonoBehaviour, IGun
     {
         if(Physics.Raycast(Atrributes.ShotPoint.transform.position, Atrributes.ShotPoint.TransformDirection(Vector3.forward), out hit, Atrributes.Range))
         { 
-            Debug.Log(hit.transform.tag);      
         }
 
         if(hit.transform != null)
