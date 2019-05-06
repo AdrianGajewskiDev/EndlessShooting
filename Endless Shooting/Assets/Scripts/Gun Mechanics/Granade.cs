@@ -73,7 +73,6 @@ public class Granade : MonoBehaviour
 
         foreach(Collider col in coll )
         {
-            Debug.Log("Collieded with: " + col.gameObject.name);
             Rigidbody rb = col.GetComponent<Rigidbody>();
             if(rb != null)
             {

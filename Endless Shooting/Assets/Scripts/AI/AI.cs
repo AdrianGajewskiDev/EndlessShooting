@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class AI : MonoBehaviour
 {
@@ -73,7 +74,21 @@ public abstract class AI : MonoBehaviour
 
     public abstract void Shoot();
 
-    public abstract void Reload();
+    public abstract IEnumerator Reload();
 
-    public abstract void GiveDamage(ref RaycastHit hit, int damageAmount);
+    public virtual void GiveDamage<T>(ref RaycastHit hit, int damageAmount) where T : IHealth
+    {
+        if(hit.transform.GetComponent<T>() != null)
+        {
+            hit.transform.GetComponent<T>().GetDamage(damageAmount);
+        }
+    }
+
+    public void SetDestination(ref NavMeshAgent agent, Transform[] waypoints)
+    {
+        var index = UnityEngine.Random.Range(0, waypoints.Length);
+        var waypoint = waypoints[index].position;
+
+        agent.SetDestination(waypoint);
+    }
 }

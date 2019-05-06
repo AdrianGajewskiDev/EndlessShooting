@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityStandardAssets.Characters.FirstPerson;
 
 public class EnemyAI : AI
@@ -21,6 +22,16 @@ public class EnemyAI : AI
     private Transform targetAI;
     private Transform targetPlayer;
 
+    [Header("Navigation")]
+    NavMeshAgent navAgent;
+    public Transform[] waypoints;
+
+    void Start()
+    {
+        navAgent = GetComponent<NavMeshAgent>();
+        Atributes.Animator = GetComponentInChildren<Animator>();
+        SetDestination(ref navAgent, waypoints);
+    }
     void OnDrawGizmos()
     {
         DrawGizmos(transform, maxRadius, maxAngle );
@@ -35,25 +46,42 @@ public class EnemyAI : AI
             RotateToTarget(transform, targetAI, rotateSpeed);
 
         if(targetPlayer != null)
+        {
             RotateToTarget(transform, targetPlayer, rotateSpeed);
+            Atributes.Animator.SetBool("Attacking", true);
+            navAgent.speed = 0;
+        }
+        else
+        {
+            Atributes.Animator.SetBool("Attacking", false);
+            navAgent.speed = 3.5f;
+        }
 
-        
 
         Shoot();
     }
 
     void Update()
     {
-        if(Atributes.CurrentAmmoInCip < 1)
-            Reload(Atributes.MaxAmmo, Atributes.ClipSize, Atributes.CurrentAmmoInCip, Atributes.ReloadSound);
+        if(Atributes.CurrentAmmoInCip == 0)
+            StartCoroutine(Reload());
+
+        if (!navAgent.pathPending)
+        {
+            if (navAgent.remainingDistance <= navAgent.stoppingDistance)
+            {
+                if (!navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f)
+                {
+                    SetDestination(ref navAgent, waypoints);
+                }
+            }
+        }
     }
 
     public override void Shoot()
     {
         if(Time.time >= _timeToFireAllowed  && Atributes.CurrentAmmoInCip >= 1)
         {
-            Atributes.CurrentAmmoInCip -= 1;
-            _timeToFireAllowed = Time.time + 1 / Atributes.RateOfFire;
             RaycastHit hitInfo;
             if(Physics.Raycast(Atributes.ShotPoint.position, Atributes.ShotPoint.TransformDirection(Vector3.forward), out hitInfo, Atributes.Range, raycastHitmask))
             {
@@ -61,22 +89,46 @@ public class EnemyAI : AI
                 {   
                     if(hitInfo.transform.CompareTag("PlayerTeam") || hitInfo.transform.CompareTag("Player"))
                     {
+                        Atributes.CurrentAmmoInCip -= 1;
+                        _timeToFireAllowed = Time.time + 1 / Atributes.RateOfFire;
                         Atributes.ShotSound.Play();
                         muzzle.Play();
-                        GiveDamage(ref hitInfo, Atributes.Damage);
+                        GiveDamage<PlayerHealth>(ref hitInfo, Atributes.Damage);
+                        GiveDamage<AIHealth>(ref hitInfo, Atributes.Damage);
                     }   
                 }
-            }
+            }   
         }    
     }
 
-    public override void GiveDamage(ref RaycastHit hit, int damageAmount)
+    public override IEnumerator Reload()
     {
-        IHealth health;
-        if(hit.transform.GetComponent<IHealth>() != null)
+        if(Atributes.MaxAmmo > 0)
         {
-            health = hit.transform.GetComponent<IHealth>();
-            health.GetDamage(damageAmount);
+            if(Atributes.MaxAmmo >= 1)
+            {
+                Atributes.ReloadSound.Play();
+                GetComponent<EnemyAI>().enabled = false;
+                yield return new WaitForSeconds(4f);
+                GetComponent<EnemyAI>().enabled = true;
+                if(Atributes.MaxAmmo >= 1)
+                {
+                    if(Atributes.CurrentAmmoInCip > 0)
+                    {
+                        var currentAmmo = Atributes.CurrentAmmoInCip;
+                        var ammoToAdd = Atributes.ClipSize - currentAmmo;
+                        Atributes.MaxAmmo -= ammoToAdd;
+                        Atributes.CurrentAmmoInCip += ammoToAdd;
+                    }
+                    
+                    if(Atributes.CurrentAmmoInCip == 0)
+                    {
+                        var ammoToAdd = Atributes.ClipSize;
+                        Atributes.MaxAmmo -= ammoToAdd;
+                        Atributes.CurrentAmmoInCip += ammoToAdd;
+                    }  
+                }
+            }  
         }
     }
 }
