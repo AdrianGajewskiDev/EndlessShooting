@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class AIHealth : MonoBehaviour, IHealth
@@ -11,10 +12,13 @@ public class AIHealth : MonoBehaviour, IHealth
 
     public AI aiScript;
     [SerializeField] AIType AiType;
+    [SerializeField] Transform[]
+     respawnPoints;
     private const int MAX_HEALTH = 15;
     private int _health = 15;
     private Animator anim;
     private NavMeshAgent agent;
+    private bool _addPoints = false;
 
     void Awake()
     {
@@ -22,14 +26,15 @@ public class AIHealth : MonoBehaviour, IHealth
         agent = GetComponent<NavMeshAgent>();
     }
 
-    public void Die()
+    public async void Die()
     {
         if(IsDead() )
         {
             anim.SetBool("Die", true);
             aiScript.enabled = false;
             agent.enabled = false;
-            Destroy(gameObject,1f);
+            _addPoints = true;
+            Respawn();
         }
     }
 
@@ -50,23 +55,29 @@ public class AIHealth : MonoBehaviour, IHealth
 
     public void Respawn()
     {
-    }
+        aiScript.enabled = true;
+        agent.enabled = true;
+        anim.SetBool("Die", false);
+        _health = MAX_HEALTH;
+        var index = Random.Range(0, respawnPoints.Length);
+        var respawnPoint = respawnPoints[index].position;
+        transform.position = respawnPoint;
 
-    void OnDestroy()
-    {
-        switch(AiType)
+        if(_addPoints == true)
+        {
+            _addPoints = false;
+            switch(AiType)
             {
                 case AIType.Enemy:
                 {
-                    AIRespawner.enemyAmount -= 1;
                     GlobalScore.FriendScore += 1;
                 }break;
 
                 case AIType.Friend:
                 {
-                    AIRespawner.friendAmount -= 1;
                     GlobalScore.EnemyScore += 1;
                 }break;
             }
+        }
     }
 }

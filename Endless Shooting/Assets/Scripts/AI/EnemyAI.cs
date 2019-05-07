@@ -28,6 +28,7 @@ public class EnemyAI : AI
 
     void Start()
     {
+        Atributes.MaxAmmo = int.MaxValue;
         navAgent = GetComponent<NavMeshAgent>();
         Atributes.Animator = GetComponentInChildren<Animator>();
         SetDestination(ref navAgent, waypoints);
