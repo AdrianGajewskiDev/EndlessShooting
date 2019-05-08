@@ -138,6 +138,7 @@ public class SniperGun : MonoBehaviour, IGun
     void Update()
     {
         UIAmmoController.Type = Atributes.Type;
+        Atributes.Crosshair.SetActive(true);
         Aim();
         Shoot();
         StartCoroutine(Reload());

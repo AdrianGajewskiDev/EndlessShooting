@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class PlayerHealth : MonoBehaviour, IHealth
 {
     private const int MAX_HEALTH = 25;
     public static int Health = 25;
     [SerializeField]Transform[] respawnPoints;
+    [SerializeField]Transform player;
 
     public void Die() {}
 
     private void Update()
     {
+
         Respawn();
-        Debug.Log(Health);
     }
 
     public void GetDamage(int amount)
@@ -30,12 +32,15 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         if(IsDead())  
         {
-            gameObject.SetActive(false);
+            GlobalScore.EnemyScore += 1;
+            GetComponent<FirstPersonController>().enabled = false;
+            GetComponent<CharacterController>().enabled = false;
             Health = MAX_HEALTH;
             var index = Random.Range(0, respawnPoints.Length);
             var respawnPoint = respawnPoints[index].position;
-            transform.position = respawnPoint;
-            gameObject.SetActive(true);
+            player.position = respawnPoint;
+            GetComponent<FirstPersonController>().enabled = true;
+            GetComponent<CharacterController>().enabled = true;
         }
     }
 

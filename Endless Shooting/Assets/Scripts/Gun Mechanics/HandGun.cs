@@ -99,7 +99,6 @@ public class HandGun : MonoBehaviour, IGun
     void Start()
     {
         Atrributes.Animation = GetComponentInParent<Animation>();
-        Atrributes.Crosshair.SetActive(true);
     }
 
     void Awake()
@@ -111,7 +110,7 @@ public class HandGun : MonoBehaviour, IGun
     void Update()
     {
         Destroy(GameObject.Find("SmallExplosionEffect(Clone)"),0.02f);
-        
+        Atrributes.Crosshair.SetActive(true);        
         SetInput();
         Shoot();
         StartCoroutine(Reload()); 

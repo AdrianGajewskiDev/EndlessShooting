@@ -113,7 +113,7 @@ public class SMGGun : MonoBehaviour, IGun
     void Update()
     {
         Destroy(GameObject.Find("SmallExplosionEffect(Clone)"),0.02f);
-
+        Atrributes.Crosshair.SetActive(true);
         UIAmmoController.Type = Atrributes.Type;
         SetInput();
         Shoot();
