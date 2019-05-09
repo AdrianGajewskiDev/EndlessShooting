@@ -12,9 +12,12 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     public void Die() {}
 
+    void Start()
+    {
+        StartCoroutine(Recover());
+    }
     private void Update()
     {
-
         Respawn();
     }
 
@@ -42,6 +45,21 @@ public class PlayerHealth : MonoBehaviour, IHealth
             GetComponent<FirstPersonController>().enabled = true;
             GetComponent<CharacterController>().enabled = true;
         }
+    }
+
+    IEnumerator Recover()
+    {
+        while(true)
+        {
+            if(Health < MAX_HEALTH)
+            {
+                Health += 5;
+                yield return new WaitForSeconds(2f);
+            }
+            else
+                yield return null;
+        }
+        
     }
 
 }

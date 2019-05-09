@@ -20,6 +20,8 @@ public class FriendAI : AI
     [SerializeField] float rotateSpeed;
     private float _timeToFireAllowed = 0f;
     private Transform targetAI;
+    public static int score;
+
 
     [Header("Navigation")]
     NavMeshAgent navAgent;
@@ -89,6 +91,10 @@ public class FriendAI : AI
                         Atributes.ShotSound.Play();
                         muzzle.Play();
                         GiveDamage<AIHealth>(ref hitInfo, Atributes.Damage);
+                        if(hitInfo.transform.GetComponent<IHealth>().IsDead() == true)
+                        {
+                            score += 1;
+                        }
                     }   
                 }
             }   

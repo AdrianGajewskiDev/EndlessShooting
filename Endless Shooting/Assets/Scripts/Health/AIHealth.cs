@@ -26,7 +26,7 @@ public class AIHealth : MonoBehaviour, IHealth
         agent = GetComponent<NavMeshAgent>();
     }
 
-    public async void Die()
+    public void Die()
     {
         if(IsDead() )
         {

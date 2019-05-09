@@ -21,6 +21,7 @@ public class EnemyAI : AI
     private float _timeToFireAllowed = 0f;
     private Transform targetAI;
     private Transform targetPlayer;
+    public static int score;
 
     [Header("Navigation")]
     NavMeshAgent navAgent;
@@ -96,6 +97,11 @@ public class EnemyAI : AI
                         muzzle.Play();
                         GiveDamage<PlayerHealth>(ref hitInfo, Atributes.Damage);
                         GiveDamage<AIHealth>(ref hitInfo, Atributes.Damage);
+                        if(hitInfo.transform.GetComponent<IHealth>().IsDead() == true)
+                        {
+                            score += 1;
+                            return;
+                        }
                     }   
                 }
             }   
