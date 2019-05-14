@@ -79,5 +79,7 @@ public class AIHealth : MonoBehaviour, IHealth
                 }break;
             }
         }
+
+        GetComponent<EnemyAI>().Deaths += 1;
     }
 }

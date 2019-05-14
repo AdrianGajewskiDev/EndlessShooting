@@ -14,21 +14,29 @@ public class GlobalScore : MonoBehaviour
     public static string Winners;
     void Update()
     {
-        if(EnemyScore == 65 || FriendScore == 65)
-        {
-            if(EnemyScore > FriendScore)
-                Winners = "Enemy Team Won";
-            else if(FriendScore > EnemyScore)
-                Winners = "You Team Won";
+        Debug.Log(Time.timeScale);
 
+        if(EnemyScore == 2 || FriendScore == 2)
+        {
+            if (EnemyScore > FriendScore)
+                Winners = StaticStrings.EnemyTeamWon;
+            else if (FriendScore > EnemyScore)
+                Winners = StaticStrings.FriendTeamWon;
+            else if (FriendScore == EnemyScore)
+                Winners = StaticStrings.Draw;
 
             IsEndOfGame = true;
         }
 
-        
-
-
         enemyScoreText.text = EnemyScore.ToString();
         friendScoreText.text = FriendScore.ToString();
     }
+
+    public static void Restart()
+    {
+        IsEndOfGame = false;
+        EnemyScore = 0;
+        FriendScore = 0;
+    }
+    
 }

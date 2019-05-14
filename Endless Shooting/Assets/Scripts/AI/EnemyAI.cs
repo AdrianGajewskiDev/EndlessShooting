@@ -22,6 +22,7 @@ public class EnemyAI : AI
     private Transform targetAI;
     private Transform targetPlayer;
     public static int score;
+    public int Deaths;
 
     [Header("Navigation")]
     NavMeshAgent navAgent;
@@ -38,7 +39,8 @@ public class EnemyAI : AI
     {
         DrawGizmos(transform, maxRadius, maxAngle );
     }
-
+    public int GetScore() => score;
+    public int GetNumberOfDeaths() => Deaths;
     void FixedUpdate()
     {
         targetAI = ScanForTarget<FriendAI>(transform, mask, maxRadius, maxAngle);

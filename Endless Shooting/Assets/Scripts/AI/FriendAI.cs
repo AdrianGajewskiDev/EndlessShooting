@@ -21,11 +21,14 @@ public class FriendAI : AI
     private float _timeToFireAllowed = 0f;
     private Transform targetAI;
     public static int score;
+    public int Deaths;
 
 
     [Header("Navigation")]
     NavMeshAgent navAgent;
     public Transform[] waypoints;
+    public int GetScore() => score;
+    public int GetNumberOfDeaths() => Deaths;
 
     void Start()
     {
